@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+<aside th:fragment="sidebarFragment" id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link " th:href="@{/rrr/admin/dashboard}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#tables-nav1" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people"></i><span>Group</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="tables-nav1" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/rrr/admin/group-list}">
+                        <i class="bi bi-circle"></i><span>List</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/rrr/admin/group-add}">
+                        <i class="bi bi-circle"></i><span>Add</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- End Group Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#tables-nav2" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-person-gear"></i><span>Sub Admins</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="tables-nav2" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/rrr/admin/subAdmin-list}">
+                        <i class="bi bi-circle"></i><span>List</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/rrr/admin/subAdminAdd}">
+                        <i class="bi bi-circle"></i><span>Add</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- End Sub admin Nav -->
+
+
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link collapsed" th:href="@{/profile}">-->
+<!--                <i class="bi bi-person"></i>-->
+<!--                <span>Profile</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; End Profile Page Nav &ndash;&gt;-->
+
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link collapsed" th:href="@{/topGainers}">-->
+<!--                <i class="bi bi-sliders2-vertical"></i>-->
+<!--                <span>Top Gainers</span>-->
+<!--            </a>-->
+<!--        </li>-->
+        <!-- End Top Gainers Page Nav -->
+
+<!--        <li class="nav-item" th:if="${session.role.equals('ADMIN')}">-->
+<!--            <a class="nav-link collapsed" th:href="@{/admin/userReport}">-->
+<!--                <i class="bi bi-card-list"></i>-->
+<!--                <span>User List</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; End User Report Page Nav &ndash;&gt;-->
+
+<!--        <li class="nav-item" th:if="${session.role.equals('ADMIN')}">-->
+<!--            <a class="nav-link collapsed" th:href="@{/admin/settings}">-->
+<!--                <i class="bi bi-gear"></i>-->
+<!--                <span>Settings</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; End Settings Page Nav &ndash;&gt;-->
+
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link collapsed" th:href="pages-error-404.html">-->
+<!--                <i class="bi bi-dash-circle"></i>-->
+<!--                <span>Error 404</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; End Error 404 Page Nav &ndash;&gt;-->
+
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link collapsed" th:href="pages-blank.html">-->
+<!--                <i class="bi bi-file-earmark"></i>-->
+<!--                <span>Blank</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; End Blank Page Nav &ndash;&gt;-->
+
+    </ul>
+
+</aside>
+</body>
+</html>

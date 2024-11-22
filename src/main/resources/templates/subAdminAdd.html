@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{'/fragments/head' :: head('Sub Admin Add')}"></head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header th:insert="~{'/fragments/header' :: header}"></header>
+<!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside th:insert="~{'/fragments/sidebar' :: sidebarFragment}"></aside>
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+    <!--  manage error secction start  -->
+
+    <div th:if="${success}" class="my-2 alert alert-success alert-dismissible fade show" role="alert">
+        <p class="mb-0 small" th:text="${success}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${error}" class="my-2 alert alert-danger alert-dismissible fade show" role="alert">
+        <p class="mb-0 small" th:text="${error}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!--    manage error section end  -->
+
+    <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Add Sub Admin</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section dashboard">
+        <form th:action="@{/rrr/admin/subAdminAdd}" th:method="post" th:object="${addAdmin}">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">User Name</label>
+                    <input type="text" th:field="*{userName}" class="form-control" placeholder="Enter User Name">
+                    <div class="text-danger errorHandle" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">First Name</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" placeholder="Enter First Name">
+                    <div class="text-danger errorHandle" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" placeholder="Enter Last Name">
+                    <div class="text-danger errorHandle" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">Email</label>
+                    <input type="text" th:field="*{email}" class="form-control" placeholder="Enter Email Id">
+                    <div class="text-danger errorHandle" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    <div class="text-danger errorHandle" th:if="${emailError}" th:text="${emailError}"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Mobile</label>
+                    <input type="text" th:field="*{mobile}" class="form-control" placeholder="Enter Mobile Number">
+                    <div class="text-danger errorHandle" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></div>
+                    <div class="text-danger errorHandle" th:if="${mobileError}" th:text="${mobileError}"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Group</label>
+                    <Select th:field="*{groupId}" class="form-select">
+                        <option th:value="0">Select Group</option>
+                        <div th:each="groupItem, iterStat : ${groupList}">
+                            <option th:value="${groupItem.groupId}" th:text="${groupItem.groupName}"></option>
+                        </div>
+
+                    </Select>
+                    <div class="text-danger errorHandle" th:if="${groupError}" th:text="${groupError}"></div>
+                </div>
+            </div>
+
+            <div class="row mb-md-4">
+                <div class="col-md-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" th:field="*{password}" class="form-control" placeholder="Password">
+                    <div class="text-danger errorHandle" th:if="${passwordRequired}" th:text="${passwordRequired}"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" th:field="*{confirmPassword}" class="form-control" placeholder="Confirm Password">
+                    <div class="text-danger errorHandle" th:if="${passwordError}" th:text="${passwordError}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-1">
+                    <input type="submit" class="btn yellow" value="Submit">
+                </div>
+                <div class="col-md-1">
+                    <a th:href="@{/rrr/admin/reset-admin}" class="btn btn-outline-danger">Reset</a>
+                </div>
+            </div>
+        </form>
+    </section>
+
+</main>
+<!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer th:insert="~{/fragments/footer :: footer}"></footer>
+<!-- End Footer -->
+
+
+
+</body>
+
+</html>

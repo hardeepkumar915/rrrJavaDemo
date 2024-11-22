@@ -1,0 +1,26 @@
+
+
+
+.errorHandle{
+    font-size:13px;
+}
+
+a{
+   text-decoration:none;
+}
+
+.cursor{
+    cursor:pointer;
+}
+
+.yellow{
+    background-color:#EFBF04;
+}
+
+.yellow:hover{
+    background-color:#e8ba05;
+}
+
+.font-size{
+    font-size:14px;
+}

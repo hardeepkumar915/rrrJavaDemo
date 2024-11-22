@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{/fragments/head :: head('Reset Otp')}"></head>
+
+<body>
+
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a class="logo d-flex align-items-center w-auto">
+                                <img th:src="@{/img/rrr-logo.png}" alt="" width="120px">
+                            </a>
+                        </div>
+                        <!-- End Logo -->
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Verify  Otp</h5>
+                                    <p class="text-center small">Enter the Otp sent on your Email</p>
+                                </div>
+
+
+                                <!--       manage error section start-->
+
+
+                                <div th:if="${error}" class="my-2 g-0 alert alert-danger alert-dismissible fade show" role="alert">
+                                    <p class="mb-0 small" th:text="${error}"></p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+
+
+                                <!--    manage error section end  -->
+
+                                <form th:method="post" th:action="@{/rrr/admin/verifyAdmin}" class="row g-3">
+
+                                    <div class="col-12">
+                                        <label for="otp" class="form-label">Otp</label>
+                                        <div class="input-group">
+                                            <input type="text" id="otp" name="otp" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button class="btn yellow w-100" type="submit">Verify</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+<!-- End #main -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Template Main JS File -->
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+
+</html>

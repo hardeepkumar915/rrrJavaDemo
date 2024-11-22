@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{/fragments/head :: head(Login)}"></head>
+
+<body>
+
+    <main>
+        <div class="container">
+
+            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                            <div class="d-flex justify-content-center py-4">
+                                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                    <img th:src="@{/img/rrr-logo.png}" alt="" width="120px">
+                                </a>
+                            </div>
+                            <!-- End Logo -->
+
+                            <div class="card mb-3">
+
+                                <div class="card-body">
+
+                                    <div class="pt-4 pb-2">
+                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                                        <p class="text-center small">Enter your Username & password to login</p>
+                                    </div>
+
+
+                    <!--       manage error secction start-->
+
+
+                                    <div th:if="${param.logout}" class="my-2 g-0 alert alert-success alert-dismissible fade show" role="alert">
+                                        <p class="mb-0 small">You have been logged out successfully.</p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+
+                                    <div th:if="${param.error}" class="my-2 alert alert-danger alert-dismissible fade show" role="alert">
+                                        <p class="mb-0 small">Invalid Username and password</p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+
+                                    <div th:if="${param.error == 'inactive'}" class="my-2 alert alert-danger alert-dismissible fade show" role="alert">
+                                        <p class="mb-0 small">Your account is inactive. Please wait till active your account</p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+
+
+                                    <!--    manage error section end  -->
+
+                                    <form method="post" th:action="@{/rrr/admin/login}" class="row g-3">
+                                        <div class="col-12">
+                                            <label class="form-label">Username</label>
+                                            <div class="input-group">
+                                                <input type="text" name="userName" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label">Password</label>
+                                            <input type="password" name="password" class="form-control">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <button class="btn yellow w-100" type="submit">Login</button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+    <!-- End #main -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="/js/main.js"></script>
+
+</body>
+
+</html>
