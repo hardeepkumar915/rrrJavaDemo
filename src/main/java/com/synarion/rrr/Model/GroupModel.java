@@ -20,7 +20,7 @@ public class GroupModel {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    private int status;
+    private int status = 1;
 
     @Transient
     private String formatedDateTime;

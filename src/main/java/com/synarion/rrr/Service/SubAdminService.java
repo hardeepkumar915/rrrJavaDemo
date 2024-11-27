@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -57,9 +59,6 @@ public class SubAdminService implements UserDetailsService {
         SubAdminModel admin = subAdminRepository.findByUserName(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found : " + userName));
 
-        System.out.println("usename -> "+ admin.getUserName());
-        System.out.println("password -> "+ passwordEncoder.encode(admin.getPassword()));
-
         return User.builder()
                 .username(admin.getUserName())
                 .password(admin.getPassword())
@@ -71,4 +70,7 @@ public class SubAdminService implements UserDetailsService {
     }
 
 
+    public List<SubAdminModel> searchAdmin(String keyword, String active, Long startDate, Long endDate) {
+        return subAdminRepository.searchAdmin(keyword != null ? keyword.toLowerCase() : null, active, startDate, endDate);
+    }
 }

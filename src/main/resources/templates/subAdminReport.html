@@ -41,21 +41,27 @@
 
 <!--    filter form-->
 
-    <form method="get" action="/users">
-
-        <input type="text" id="keyword" name="keyword" value="${param.keyword}" />
-
-        <select id="active" name="active">
-            <option value="">All</option>
-            <option value="true" th:selected="${param.active == 'true'}">Active</option>
-            <option value="false" th:selected="${param.active == 'false'}">Inactive</option>
-        </select>
-
-        <input type="date" id="startDate" name="startDate" value="${param.startDate}" />
-
-        <input type="date" id="endDate" name="endDate" value="${param.endDate}" />
-
-        <button type="submit">Search</button>
+    <form th:method="post" th:action="@{/rrr/admin/subAdmin-list}" class="row my-2">
+        <div class="col-md-2">
+            <select id="active" name="active" class="form-control">
+                <option value="">All</option>
+                <option value="Y" th:selected="${param.active == 'true'}">Active</option>
+                <option value="N" th:selected="${param.active == 'false'}">Inactive</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="text" id="keyword" class="form-control" name="keyword" th:value="${param.keyword}" />
+        </div>
+        <div class="col-md-2">
+            <input type="date" id="startDate" class="form-control" name="startDate" th:value="${param.startDate}" />
+        </div>
+        <div class="col-md-2">
+            <input type="date" id="endDate" class="form-control" name="endDate" th:value="${param.endDate}" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn yellow">Search</button>
+            <button th:href="@{/rrr/admin/subAdmin-list}" class="btn btn-outline-danger">Reset</button>
+        </div>
     </form>
 
 
@@ -77,9 +83,9 @@
                 <td th:text="${subAdmin.firstName}+' '+${subAdmin.lastName}" th:class="font-size"></td>
                 <td th:text="${subAdmin.email}" th:class="font-size"></td>
                 <td th:text="${subAdmin.mobile}" th:class="font-size"></td>
-                <td th:text="${subAdmin.formatedDateTime}" th:class="font-size"></td>
+                <td th:text="${subAdmin.createdAt != null ? #dates.format(subAdmin.createdAt, 'yyyy-MM-dd hh:mm:ss a') : 'N/A'}" th:class="font-size"></td>
                 <td class="cursor d-flex justify-content-between">
-                    <span th:class="${subAdmin.status == 1? 'text-success' : 'text-danger'}" ><i th:class="'bi bi-check-circle toggle-status'" th:data-id="${subAdmin.subAdminId}"></i></span>
+                    <span th:class="${subAdmin.status.equals('Y')? 'text-success' : 'text-danger'}" ><i th:class="${subAdmin.status.equals('Y') ? 'bi bi-check-circle toggle-status' : 'bi bi-x-circle toggle-status'}" th:data-id="${subAdmin.subAdminId}"></i></span>
                     <span><a th:href="@{'/rrr/admin/edit-admin/' + ${subAdmin.subAdminId}}" class="text-primary"><i class="bi bi-pencil-square"></i></a></span>
                     <span><a th:href="@{'/rrr/admin/change-password/' + ${subAdmin.subAdminId}}" class="text-dark"><i class="bi bi-person-lock"></i></a></span>
                     <span><a th:href="@{'/rrr/admin/delete-admin/' + ${subAdmin.subAdminId}}" class="text-danger"><i class="bi bi-trash3"></i></a></span>
@@ -99,6 +105,9 @@
             var button = $(this);
             var status = $('#status-' + subAdminId);
 
+            console.log(subAdminId);
+            console.log(button);
+            console.log(status);
 
             $.ajax({
                 url: '/rrr/admin/toggle/' + subAdminId,
@@ -111,14 +120,14 @@
                         button.addClass("bi-check-circle");
                         button.addClass("text-success");
                         button.removeClass("text-danger");
-                        status.text('1');
+                        status.text('Y');
 
                     } else {
                         button.removeClass("bi-check-circle");
                         button.addClass("bi-x-circle");
                         button.addClass("text-danger")
                         button.removeClass("text-success")
-                        status.text('0');
+                        status.text('N');
                     }
                 },
                 error: function(xhr, status, error) {

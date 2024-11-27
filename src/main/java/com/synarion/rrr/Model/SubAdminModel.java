@@ -1,17 +1,20 @@
 package com.synarion.rrr.Model;
 
+import com.synarion.rrr.Service.Utils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Entity
 @Table(name ="sub_admin")
 @Data
 public class SubAdminModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="sub_admin_id")
@@ -42,15 +45,23 @@ public class SubAdminModel {
     @JoinColumn(name = "group_id")
     private GroupModel groupId;
 
-    private int status = 1;
+    private String status = "Y";
 
     private String password;
 
     @Transient
     private String confirmPassword;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss a")
-    private LocalDateTime createdAt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss a")
+    @Column(name="created_at")
+    private Long createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = Utils.getCurrentTime();
+    }
+
 
     @Transient
     private String formatedDateTime;

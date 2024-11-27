@@ -16,6 +16,20 @@
 
 <main id="main" class="main">
 
+    <!--  manage error secction start  -->
+
+    <div th:if="${success}" class="my-2 alert alert-success alert-dismissible fade show" role="alert">
+        <p class="mb-0 small" th:text="${success}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${error}" class="my-2 alert alert-danger alert-dismissible fade show" role="alert">
+        <p class="mb-0 small" th:text="${error}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!--    manage error section end  -->
+
     <div class="pagetitle">
         <h1>Group List</h1>
         <nav>
@@ -42,8 +56,8 @@
                 <td th:text="${group.formatedDateTime}" th:class="font-size"></td>
                 <td class="cursor d-flex">
                     <span th:class="${group.status == 1? 'text-success' : 'text-danger'}" ><i th:class="'bi bi-check-circle toggle-status'" th:data-id="${group.groupId}"></i></span>
-                    <span class="ms-2"><a th:href="@{'/rrr/admin/edit-group/' + ${group.groupId}}" class="text-primary"><i class="bi bi-pencil-square"></i></a></span>
-                    <span class="ms-2"><a th:href="@{'/rrr/admin/delete-group/' + ${group.groupId}}" class="text-danger"><i class="bi bi-trash3"></i></a></span>
+                    <span class="ms-2"><a th:href="@{'/rrr/admin/update-group/' + ${group.groupId}}" class="text-primary"><i class="bi bi-pencil-square"></i></a></span>
+                    <span class="ms-2"><a th:href="@{'/rrr/admin/delete-group/' + ${group.groupId}}" onclick="return confirmDelete();" class="text-danger"><i class="bi bi-trash3"></i></a></span>
                 </td>
             </tr>
             </tbody>
@@ -56,13 +70,12 @@
 <script>
     $(document).ready(function() {
         $('.toggle-status').on('click', function() {
-            var subAdminId = $(this).data('id');
+            var groupId = $(this).data('id');
             var button = $(this);
-            var status = $('#status-' + subAdminId);
-
+            var status = $('#status-' + groupId);
 
             $.ajax({
-                url: '/rrr/admin/toggle/' + subAdminId,
+                url: '/rrr/admin/group-list/status/' + groupId,
                 type: 'POST',
                 success: function(response) {
 
@@ -90,6 +103,12 @@
             });
         });
     });
+
+
+    function confirmDelete() {
+        return confirm(`Are you sure you want to delete the group "${groupName}"?`);
+    }
+
 </script>
 </body>
 </html>

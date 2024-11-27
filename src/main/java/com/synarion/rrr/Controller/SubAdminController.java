@@ -5,6 +5,7 @@ import com.synarion.rrr.Model.SubAdminModel;
 import com.synarion.rrr.Repository.SubAdminRepository;
 import com.synarion.rrr.Service.GroupService;
 import com.synarion.rrr.Service.SubAdminService;
+import com.synarion.rrr.Service.Utils;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -45,7 +48,13 @@ public class SubAdminController {
 
     @GetMapping("/")
     public String noEndPoint(){
-        return "login";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return "login";
+        }else{
+            return "redirect:/rrr/admin/dashboard";
+        }
     }
 
     @GetMapping("/dashboard")
@@ -55,19 +64,14 @@ public class SubAdminController {
 
     @GetMapping("/login")
     public String showLoginPage(){
-        System.out.print("show login page -> ");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println(auth);
-
         if(!auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
-
-            System.out.println("in auth method");
-
             return "login";
+        }else{
+            return "redirect:/rrr/admin/dashboard";
         }
-        return "redirect:/rrr/admin/dashboard";
     }
 
 //    @PostMapping("/login")
@@ -92,7 +96,7 @@ public class SubAdminController {
         int adminId = (int)session.getAttribute("adminId");
         Optional<SubAdminModel> subAdminModel = subAdminRepository.findById(adminId);
 
-        if(subAdminModel.get().getOtp().equals(otp)){
+        if(subAdminModel.get().getOtp()!=null || subAdminModel.get().getOtp().equals(otp)){
             return "redirect:/rrr/admin/dashboard";
         }else{
             model.addAttribute("error","Invalid Otp");
@@ -109,7 +113,7 @@ public class SubAdminController {
     }
 
     @PostMapping("/subAdminAdd")
-    public String addSubAdmin(@Valid @ModelAttribute("addAdmin") SubAdminModel subAdminModel, BindingResult bindingResult, Model model) throws IOException {
+    public String addSubAdmin(@Valid @ModelAttribute("addAdmin") SubAdminModel subAdminModel, BindingResult bindingResult, Model model,RedirectAttributes redirectAttributes) throws IOException {
         if(bindingResult.hasErrors()){
             List<GroupModel> groupList = groupService.getAllGroups();
             model.addAttribute("groupList",groupList);
@@ -147,10 +151,8 @@ public class SubAdminController {
             model.addAttribute("error","something went wrong, try again later");
             return "subAdminAdd";
         }
-        List<GroupModel> groupList = groupService.getAllGroups();
-        model.addAttribute("groupList",groupList);
-        model.addAttribute("success", "Sub Admin added successfully ");
-        return "subAdminAdd";
+        redirectAttributes.addFlashAttribute("success", "Sub Admin added successfully ");
+        return "redirect:/rrr/admin/subAdmin-list";
     }
 
     @GetMapping("/reset-admin")
@@ -165,13 +167,38 @@ public class SubAdminController {
     public String showSubAdminList(Model model){
         List<SubAdminModel> subAdmins = subAdminService.getAllAdmins();
 
-        for(SubAdminModel subAdmin : subAdmins){
-            LocalDateTime localDateTime = subAdmin.getCreatedAt();
-            String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss a"));
-            subAdmin.setFormatedDateTime(formattedDate);
-        }
+//        for(SubAdminModel subAdmin : subAdmins){
+//            LocalDateTime localDateTime = subAdmin.getCreatedAt();
+//            String formattedDate="";
+//            if(localDateTime!=null){
+//                formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss a"));}
+//            subAdmin.setFormatedDateTime(formattedDate);
+//        }
 
         model.addAttribute("subAdmins",subAdmins);
+        return "subAdminReport";
+    }
+
+    @PostMapping("/subAdmin-list")
+    public String filterAdmin (
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String active,
+            @RequestParam(value = "startDate",required = false) String startDateStr,
+            @RequestParam(value = "endDate",required = false) String endDateStr,
+            Model model) throws Exception{
+
+        if(active.isEmpty()){
+            List<SubAdminModel> subAdmins = subAdminService.getAllAdmins();
+            model.addAttribute("subAdmins",subAdmins);
+            return "subAdminReport";
+        }
+
+        Long startDate = (startDateStr != null && !startDateStr.isEmpty()) ? Utils.convertDateToMillis(startDateStr+" 00:00:00") : null;
+        Long endDate = (endDateStr != null && !endDateStr.isEmpty()) ? Utils.convertDateToMillis(endDateStr+" 23:59:59") : Utils.getCurrentTime();
+
+        List<SubAdminModel> subAdmins = subAdminService.searchAdmin(keyword, active, startDate, endDate);
+
+        model.addAttribute("subAdmins", subAdmins);
         return "subAdminReport";
     }
 
@@ -181,12 +208,12 @@ public class SubAdminController {
         SubAdminModel admin = subAdminService.findById(id); // Fetch the user
 
         if (admin != null) {
-            if(admin.getStatus()==1){
+            if(admin.getStatus().equals("Y")){
                 // Toggle the active status
-                admin.setStatus(0);
+                admin.setStatus("N");
 
             }else{
-                admin.setStatus(1);
+                admin.setStatus("Y");
             }
             subAdminService.save(admin); // Save the user with updated status
 
@@ -264,10 +291,9 @@ public class SubAdminController {
             redirectAttributes.addFlashAttribute("error","something went wrong, try again later");
             return "redirect:/rrr/admin/edit-admin/"+id;
         }
-        List<GroupModel> groupList = groupService.getAllGroups();
-        redirectAttributes.addFlashAttribute("groupList",groupList);
+
         redirectAttributes.addFlashAttribute("success", "Sub Admin edited successfully ");
-        return "redirect:/rrr/admin/edit-admin/"+id;
+        return "redirect:/rrr/admin/subAdmin-list";
     }
 
     @GetMapping("/delete-admin/{id}")
